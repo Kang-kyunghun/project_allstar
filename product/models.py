@@ -1,44 +1,44 @@
-from django.db              import models
+from django.db      import models
 
 class Category(models.Model):
-    category                = models.CharField(max_length = 50)
+    category        = models.CharField(max_length = 50)
   
     def __str__(self):
         return self.category 
     
     class Meta:
-        db_table            = 'categories'
+        db_table     = 'categories'
 
 class SubCategory(models.Model):
-    sub_category            = models.CharField(max_length = 50)
+    sub_category     = models.CharField(max_length = 50)
   
     def __str__(self):
         return self.sub_category 
     
     class Meta:
-        db_table            = 'sub_categories'
+        db_table      = 'sub_categories'
 
 class Series(models.Model):
-    name                    = models.CharField(max_length = 100)
-    detail_description      = models.TextField()
-    feature                 = models.URLField()
-    additional_image        = models.URLField()
-    image                   = models.URLField()
+    name                  = models.CharField(max_length = 100)
+    detail_description    = models.TextField()
+    feature               = models.URLField()
+    additional_image      = models.URLField()
+    image                 = models.URLField()
 
     def __str__(self):
         return self.name 
     
     class Meta:
-        db_table            = 'serieses'
+        db_table          = 'series'
 
 class Sex(models.Model):
-    sex                     = models.CharField(max_length = 50)
+    name            = models.CharField(max_length = 50)
 
     def __str__(self):
-        return self.sex 
+        return self.name 
     
     class Meta:
-        db_table            = 'sexes'
+        db_table    = 'sexes'
 
 class FilteringColor(models.Model):
     filtering_color         = models.CharField(max_length = 100)
@@ -60,31 +60,31 @@ class Color(models.Model):
         db_table            = 'colors'
 
 class Promotion(models.Model):
-    promotion               = models.CharField(max_length = 50, null = True)
+    promotion         = models.CharField(max_length = 50, null = True)
     
     def __str__(self):
         return self.promotion 
     
     class Meta:
-        db_table            = 'promotions'
+        db_table       = 'promotions'
 
 class Silouette(models.Model):
-    silouette               = models.CharField(max_length = 50)
+    silouette          = models.CharField(max_length = 50)
     
     def __str__(self):
         return self.silouette 
     
     class Meta:
-        db_table            = 'silouettes'
+        db_table        = 'silouettes'
 
 class Size(models.Model):
-    size                    = models.IntegerField(default = 0)
+    size                = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.size 
     
     class Meta:
-        db_table            = 'sizes'
+        db_table        = 'sizes'
 
 class Product(models.Model):
     serial_number           = models.CharField(max_length = 50)
