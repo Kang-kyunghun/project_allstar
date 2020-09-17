@@ -132,5 +132,5 @@ class ProductInformation(models.Model):
     manufacture_date        = models.CharField(max_lenght = 100)
     
     class Meta:
-        db_table            = 'categories'
+        db_table            = 'product_informations'
 
