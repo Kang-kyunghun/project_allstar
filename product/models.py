@@ -128,7 +128,7 @@ class Medium(models.Model):
         db_table = 'media'
 
 class ProductInformation(models.Model):
-    product           = models.OneToOneField(Product)
+    product           = models.OneToOneField(Product, on_delete = models.CASCADE)
     material          = models.CharField(max_length = 100) 
     minimum_size      = models.IntegerField(default = 0)
     maximum_size      = models.IntegerField(default = 0)
