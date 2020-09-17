@@ -12,7 +12,7 @@ class Category(models.Model):
 class SubCategory(models.Model):
     name     = models.CharField(max_length = 50)
     category = models.ForeignKey(Category, on_delete = models.CASCADE)
-    
+
     def __str__(self):
         return self.name
     
@@ -128,7 +128,7 @@ class Medium(models.Model):
         db_table = 'media'
 
 class ProductInformation(models.Model):
-    product           = models.ForeignKey(Product, on_delete = models.CASCADE)
+    product           = models.OneToOneField(Product)
     material          = models.CharField(max_length = 100) 
     minimum_size      = models.IntegerField(default = 0)
     maximum_size      = models.IntegerField(default = 0)
