@@ -22,9 +22,9 @@ class SubCategory(models.Model):
 class Series(models.Model):
     name                = models.CharField(max_length = 100)
     detail_description  = models.TextField()
-    feature             = models.URLField()
-    additional_image    = models.URLField(null = True)
-    image               = models.URLField()
+    feature             = models.URLField(max_length = 500)
+    additional_image    = models.URLField(max_length = 500, null = True)
+    image               = models.URLField(max_length = 500)
 
     def __str__(self):
         return self.name 
@@ -92,8 +92,8 @@ class Product(models.Model):
     category            = models.ForeignKey(Category, on_delete = models.CASCADE)
     sub_category        = models.ForeignKey(SubCategory, on_delete = models.CASCADE)
     series              = models.ForeignKey(Series, on_delete = models.CASCADE)
-    main_image          = models.URLField()
-    hover_image         = models.URLField()
+    main_image          = models.URLField(max_length = 500)
+    hover_image         = models.URLField(max_length = 500)
     price               = models.DecimalField(max_digits = 10, decimal_places = 4)
     discount_rate       = models.DecimalField(max_digits = 3, decimal_places = 2, null = True)
     sex                 = models.ForeignKey(Sex, on_delete = models.CASCADE)
@@ -121,7 +121,7 @@ class ProductSize(models.Model):
 
 class Medium(models.Model):
     product     = models.ForeignKey(Product, on_delete = models.CASCADE)
-    medium_url  = models.URLField()
+    medium_url  = models.URLField(max_length = 500)
     medium_type = models.CharField(max_length = 100)
     
     class Meta:
@@ -129,15 +129,15 @@ class Medium(models.Model):
 
 class ProductInformation(models.Model):
     product           = models.OneToOneField(Product, on_delete = models.CASCADE)
-    material          = models.CharField(max_length = 100) 
+    material          = models.CharField(max_length = 1000) 
     minimum_size      = models.IntegerField(default = 0)
     maximum_size      = models.IntegerField(default = 0)
-    manufacturer      = models.CharField(max_length = 100)
-    country           = models.CharField(max_length = 100)
-    caution           = models.CharField(max_length = 200)
-    quality_assurance = models.CharField(max_length = 100)
-    as_center         = models.CharField(max_length = 100)
-    manufacture_date  = models.CharField(max_length = 100)
+    manufacturer      = models.CharField(max_length = 200)
+    country           = models.CharField(max_length = 200)
+    caution           = models.CharField(max_length = 500)
+    quality_assurance = models.CharField(max_length = 500)
+    as_center         = models.CharField(max_length = 500)
+    manufacture_date  = models.CharField(max_length = 500)
     
     class Meta:
         db_table = 'product_informations'
