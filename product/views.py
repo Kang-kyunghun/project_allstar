@@ -57,10 +57,19 @@ class MainListView(View):
             })
         return JsonResponse({'products': products_list}, status=200)
 
-class Chuck70ListView(View):   
-    def get(self, request):
+class SubCategotyListView(View):   
+    def get(self, request, sub):
         products_list =[]
-        sub_category_id            =SubCategory.objects.get(name ='척 70')
+        sub_category_dict={
+            'chuck70' : '척 70',
+            'onestar' : '원스타',
+            'launching' : '런칭 캘린더',
+            'basketball': '배스켓볼',
+            'chucktailer': '척테일러 올스타',
+            'proleather' : '프로레더',
+            'jackpurcell' : '잭퍼셀'
+        }
+        sub_category_id            =SubCategory.objects.get(name = sub_category_dict[sub])
         products                   = Product.objects.filter(sub_category_id = sub_category_id)
         for product in products:
             serial_number          = product.serial_number
