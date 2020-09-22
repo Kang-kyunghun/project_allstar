@@ -17,17 +17,28 @@ from .models        import (Category,
                             ProductInformation, 
                             ProductSize )
     
+class MainView(View):
+    def get(self, request):
+        sub_category_list = [{
+                'id'   : sub_category.id,
+                'name' : sub_category.name
+        } for sub_category in SubCategory.objects.all()]
+
+        return JsonResponse({'sub_categories': sub_category_list}, status=200)
+
 class ListView(View):   
-    def get(self, request, sub_category_id):
+    def get(self, request):
         try:
-            sub_category             = SubCategory.objects.get(id =  sub_category_id)
-            if sub_category.name == '전체보기':
-                products             = Product.objects.all()
-            elif sub_category.name in ['베스트셀러', 'MEMBERS ONLY', 'SALE'] :          
-                products =Promotion.objects.get(name = sub_category.name).product_set.all()
+            sub_category_id    = request.GET.get('sub_category_id', None) 
+            if sub_category_id == None:
+                products       = Product.objects.all()
             else:
-                products = sub_category.product_set.all()
-            
+                sub_category   = SubCategory.objects.prefetch_related('product_set__series', 'product_set__color__filtering_color', 'product_set__promotion').get(id =  sub_category_id)
+                
+                if Promotion.objects.filter(name = sub_category.name) :          
+                    products   = Promotion.objects.get(name = sub_category.name).product_set.all()
+                else:
+                    products   = sub_category.product_set.all()      
         except:
             return JsonResponse({'message':'INVALID_VALUE'}, status= 401)
         else:

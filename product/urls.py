@@ -1,8 +1,8 @@
 from django.urls import path, include
 
-from .views import MainListView, SubCategotyListView
+from .views import ListView, MainView
 
 urlpatterns = [
-    path('/shose', MainListView.as_view()),
-    path('/<str:sub>', SubCategotyListView.as_view()),
+    path('/main', MainView.as_view()),
+    path('', ListView.as_view()),
 ]
