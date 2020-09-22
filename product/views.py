@@ -17,92 +17,43 @@ from .models        import (Category,
                             ProductInformation, 
                             ProductSize )
     
-class MainListView(View):   
-    def get(self, request):
-        products_list =[]
-        products                   = Product.objects.all()
-        for product in products:
-            serial_number          = product.serial_number
-            price                  = product.price
-            main_image             = product.main_image
-            hover_image            = product.hover_image
-            series_name            = Series.objects.get(id = product.series_id).name
-            image                  = [main_image, hover_image] 
-            series_id              = Series.objects.get(id = product.series_id).id
-            globals()[f'main{product.id}'] ={
-                    'id'           : serial_number,
-                    'price'        : int(price),
-                    'image_url'    : image,
-                    'series_name'  : series_name
-            }
+class ListView(View):   
+    def get(self, request, sub_category_id):
+        
+        try:
+            sub_category             = SubCategory.objects.get(id =  sub_category_id)
+        except:
+            return JsonResponse({'message':'INVALID_VALUE'}, status= 401)
+        else:
+            if sub_category.name == '전체보기':
+                products             = Product.objects.all()
+            elif sub_category.name in ['베스트셀러', 'MEMBERS ONLY', 'SALE'] :          
+                products =Promotion.objects.get(name = sub_category.name).product_set.all()
+            else:
+                products = sub_category.product_set.all()
+            
+            products_list             =[]
+            for product in products:
+                color_products_list   = []
+                series_id             = product.series.id
+                color_products        = Product.objects.filter(series_id = series_id)
+                
+                for color_product in color_products:
+                    color_products_list.append({
+                            'id'          : color_product.id,
+                            'image_url'   : [color_product.main_image, color_product.hover_image],
+                            'color'       : color_product.color.filtering_color.name
+                    }) 
+                
+                products_list.append({
+                    "main_image":{
+                            'id'          : product.id,
+                            'price'       : int(product.price),
+                            'image_url'   : [product.main_image, product.hover_image],
+                            'series_name' : product.series.name
+                        },
+                    "color_image" : color_products_list
+                })
+        
+            return JsonResponse({'products': products_list}, status=200)
 
-            color_products_list    = []
-            color_products         = Product.objects.filter(series_id = series_id)
-            for color_product in color_products:
-                serial_number      = color_product.serial_number
-                main_image         = color_product.main_image
-                hover_image        = color_product.hover_image
-                image              = [main_image, hover_image]
-                filter_color_id    = Color.objects.get(id=color_product.color_id).filtering_color_id
-                filter_color       = FilteringColor.objects.get(id= filter_color_id).name
-                color_products_list.append({
-                        'id'        : serial_number,
-                        'image_url' : image,
-                        'color'     : filter_color
-                })          
-    
-            products_list.append({
-                "main_image"  : globals()[f'main{product.id}'],
-                "color_image" : color_products_list
-            })
-        return JsonResponse({'products': products_list}, status=200)
-
-class SubCategotyListView(View):   
-    def get(self, request, sub):
-        products_list =[]
-        sub_category_dict={
-            'chuck70' : '척 70',
-            'onestar' : '원스타',
-            'launching' : '런칭 캘린더',
-            'basketball': '배스켓볼',
-            'chucktailer': '척테일러 올스타',
-            'proleather' : '프로레더',
-            'jackpurcell' : '잭퍼셀'
-        }
-        sub_category_id            =SubCategory.objects.get(name = sub_category_dict[sub])
-        products                   = Product.objects.filter(sub_category_id = sub_category_id)
-        for product in products:
-            serial_number          = product.serial_number
-            price                  = product.price
-            main_image             = product.main_image
-            hover_image            = product.hover_image
-            series_name            = Series.objects.get(id = product.series_id).name
-            image                  = [main_image, hover_image] 
-            series_id              = Series.objects.get(id = product.series_id).id
-            globals()[f'main{product.id}'] ={
-                    'id'           : serial_number,
-                    'price'        : int(price),
-                    'image_url'    : image,
-                    'series_name'  : series_name
-            }
-
-            color_products_list    = []
-            color_products         = Product.objects.filter(series_id = series_id)
-            for color_product in color_products:
-                serial_number      = color_product.serial_number
-                main_image         = color_product.main_image
-                hover_image        = color_product.hover_image
-                image              = [main_image, hover_image]
-                filter_color_id    = Color.objects.get(id=color_product.color_id).filtering_color_id
-                filter_color       = FilteringColor.objects.get(id= filter_color_id).name
-                color_products_list.append({
-                        'id'        : serial_number,
-                        'image_url' : image,
-                        'color'     : filter_color
-                })          
-    
-            products_list.append({
-                "main_image"  : globals()[f'main{product.id}'],
-                "color_image" : color_products_list
-            })
-        return JsonResponse({'products': products_list}, status=200)
