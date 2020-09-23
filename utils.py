@@ -23,20 +23,17 @@ def login_required(func):
 
     return wrapper
 
-def is_product_wishlist(func):
-    def wrapper(self, request, id, *args, **kwargs):
-        global is_wishlist
-        is_wishlist = False
-        try:
-            token = request.headers['Authorization']
-            decoded_token = jwt.decode(token, SECRET_KEY, ALGORITHM)
-            request.account_id = decoded_token['account_id']
-            if Wishlist.objects.filter(product_id=id, account_id=request.account_id).exists():
-                is_wishlist = True
-        except jwt.exceptions.DecodeError:
-            pass
-        except KeyError:
-            pass
-        request.is_wishlist = is_wishlist
-        return func(self, request, id, *args, **kwargs)
-    return wrapper
+def is_wishlist(request, id, *args, **kwargs):
+    global is_wishlist
+    is_wishlist = False
+    try:
+        token = request.headers['Authorization']
+        decoded_token = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        request.account_id = decoded_token['account_id']
+        if Wishlist.objects.filter(product_id=id, account_id=request.account_id).exists():
+            is_wishlist = True
+    except jwt.exceptions.DecodeError:
+        pass
+    except KeyError:
+        pass
+    return is_wishlist
