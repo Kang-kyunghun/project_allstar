@@ -11,4 +11,3 @@ class Cart(Models.model):
     
     class Meta:
         db_table = "carts"
-    
