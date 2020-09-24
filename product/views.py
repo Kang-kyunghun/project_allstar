@@ -112,7 +112,7 @@ class ProductView(View):
                 {
                     'medium_url'        : product_medium.medium_url,
                     'medium_type'       : product_medium.medium_type
-                } for product_medium in product.medium_set.all()],
+                } for product_medium in product.medium_set.order_by('-medium_type')],
         'size_list'             : [size.name for size in product.size.order_by('name')],
         'related_products'      : [
                 {
@@ -123,7 +123,7 @@ class ProductView(View):
                 {
                     'main_image'        :similar_product.main_image,
                     'hover_image'       :similar_product.hover_image,
-                    'serial_number'     :similar_product.serial_number,
+                    'id'                :similar_product.id,
                     'promotion'         :similar_product.promotion.name if similar_product.promotion else None
                 } for similar_product in queryset.exclude(id=id).filter(price=product.price)[:RECOMMENDATIONS]],
         }

@@ -39,7 +39,7 @@ class SignUpView(View):
                 name    		    = data['name'],
                 phone_number        = data['phone_number'],
                 date_of_birth       = YYYY_MM_DD,
-                sex                 = '남' if data['is_male'] == True else '여',
+                sex                 = '남' if data['is_male'] == 'true' else '여',
                 password            = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
                 is_agreed_emailing  = True,
                 is_agreed_texting   = False,
