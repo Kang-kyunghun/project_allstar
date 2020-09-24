@@ -1,5 +1,5 @@
 from django.urls        import path
-from .views             import ProductView, ListView, MainView
+from .views             import ProductView, MainView, ListView
 
 urlpatterns = [
     path('/<int:id>', ProductView.as_view()),
