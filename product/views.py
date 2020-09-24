@@ -64,16 +64,16 @@ class ListView(View):
 class ProductView(View):
     def get(self, request, id):  
         try:
-            queryset = Product.objects.select_related('sex', 'color', 'sub_category', 'series', 'promotion', 'productinformation')\
-                .prefetch_related('medium_set', 'size')
-            product = queryset.get(id=id)
+            queryset = Product.objects.all()
+            product = queryset.select_related('sex', 'color', 'sub_category', 'series', 'promotion', 'productinformation')\
+                .prefetch_related('medium_set', 'size').get(id=id)
         except:
             return JsonResponse({'message':"INVALID_PRODUCT"}, status=400)
 
         information_dict = {
         'is_wishlist'           : is_wishlist(request, id),
         'price'                 : int(product.price),
-        'discount_rate'         : product.discount_rate,
+        'discount_rate'         : int(product.discount_rate) if product.discount_rate else None,
         'simple_description'    : product.simple_description,
         'serial_number'         : product.serial_number,
         'main_image'            : product.main_image,
@@ -92,43 +92,26 @@ class ProductView(View):
         'assurance'             : product.productinformation.quality_assurance,
         'as_center'             : product.productinformation.as_center,
         'manufacture_date'      : product.productinformation.manufacture_date,
-            'related_products'      : [{
-            'id'            : series_product.id,
-            'main_image'    : series_product.medium_set.all()[3].medium_url 
-            } for series_product in queryset.filter(series_id=product.series)], 
-        'sub_images'            : [{
-            'medium_url'    : product_medium.medium_url,
-            'medium_type'   : product_medium.medium_type} 
-            for product_medium in product.medium_set.all()]}
-
-        try: 
-            if product.promotion.name:
-                information_dict['promotion']   = product.promotion.name
-        except AttributeError:
-            information_dict['promotion']       = None
-
-        size_ids = ProductSize.objects.filter(product_id = id)
-        size_list = sorted([size_id.size.name for size_id in size_ids])
-        information_dict['size_list']           = size_list
-        information_dict['size_range']          = '{}-{}'\
-            .format(product.productinformation.minimum_size, product.productinformation.maximum_size)
-
-
-        similar_products = queryset.exclude(id=id).filter(price=product.price)[0:10]
-        try:
-            recommended_products = [
-                {'main_image'   :similar_product.main_image,
-                'hover_image'   :similar_product.hover_image,
-                'id'            :similar_product.id,
-                'promotion'     :similar_product.promotion.name} for similar_product in similar_products
-                ]
-        except AttributeError:
-            recommended_products = [
-                {'main_image':similar_product.main_image,
-                'hover_image':similar_product.hover_image,
-                'serial_number':similar_product.serial_number,
-                'promotion':None}  for similar_product in similar_products
-                ]
-        information_dict['recommended_product'] = recommended_products
-        
+        'size_range'            : '{}-{}'\
+            .format(product.productinformation.minimum_size, product.productinformation.maximum_size),
+        'promotion'             : product.promotion.name if product.promotion else None,
+        'sub_images'            : [
+                {
+                    'medium_url'        : product_medium.medium_url,
+                    'medium_type'       : product_medium.medium_type
+                } for product_medium in product.medium_set.all()],
+        'size_list'             : [size.name for size in product.size.order_by('name')],
+        'related_products'      : [
+                {
+                        'id'            : series_product.id,
+                        'main_image'    : series_product.medium_set.all()[3].medium_url 
+                } for series_product in queryset.filter(series_id=product.series)],  ## query -> product
+        'recommended_products'  : [
+                {
+                    'main_image'        :similar_product.main_image,
+                    'hover_image'       :similar_product.hover_image,
+                    'serial_number'     :similar_product.serial_number,
+                    'promotion'         :similar_product.promotion.name if similar_product.promotion else None
+                } for similar_product in queryset.exclude(id=id).filter(price=product.price)[0:10]],
+        }
         return JsonResponse({'product_information': [information_dict]}, status=200)
