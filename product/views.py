@@ -73,7 +73,7 @@ class ListView(View):
                         'image_url'   : [product.main_image, product.hover_image],
                         'series_name' : product.series.name,
                         'discount_rate': int(product.discount_rate) if product.discount_rate else None,
-                        'whishlist'   : is_wishlist(request, product.id)
+                        'wishlist'   : is_wishlist(request, product.id)
                     },
 
                 "color_image" : [{
