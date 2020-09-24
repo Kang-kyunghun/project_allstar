@@ -60,3 +60,30 @@ class CartView(View):
             return JsonResponse({'message':'KEY_ERROR'}, status=400)  
         except:
             return JsonResponse({'message':"KEY_ERROR"}, status=400)
+    @login_required
+    def post(self, request):
+        try:
+            data               = json.loads(request.body)
+            size_id            = Size.objects.get(name=data['size']).id
+            Cart.objects.create(
+                account_id     = request.account_id,
+                product_id     = data['product_id'],  
+                size_id        = size_id,
+                quantity       = data['quantity']
+            )
+            return JsonResponse({'sub_categories': 'post'}, status=200)
+        
+        except KeyError:
+            return JsonResponse({'message':'Key Error'}, status=401)
+    
+    @login_required
+    def delete(self, request, cart_id=0):
+        cart    = Cart.objects.filter(buy_now = False, account_id = request.account_id)
+        if cart_id == 0:
+            cart.delete()
+        else:
+            try:
+                cart.get(id = cart_id).delete()
+            except:
+                return JsonResponse({'message':'This product is not in cart'}, status=400)
+        return JsonResponse({'message':'SUCCESS'}, status=200)
