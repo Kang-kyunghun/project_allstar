@@ -84,6 +84,6 @@ class CartView(View):
         else:
             if cart.filter(id = cart_id).exists():
                 cart.get(id = cart_id).delete()
-            else:
-                return JsonResponse({'message':'This product is not in cart'}, status=400)
-        return JsonResponse({'message':'SUCCESS'}, status=200)
+                return JsonResponse({'message':'SUCCESS'}, status=200)
+            return JsonResponse({'message':'This product is not in cart'}, status=400)
+

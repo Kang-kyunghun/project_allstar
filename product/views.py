@@ -71,7 +71,9 @@ class ListView(View):
                         'id'          : product.id,
                         'price'       : int(product.price),
                         'image_url'   : [product.main_image, product.hover_image],
-                        'series_name' : product.series.name
+                        'series_name' : product.series.name,
+                        'discout_rate': int(product.discount_rate) if product.discount_rate else None,
+                        'whishlist'   : is_wishlist(request, product.id)
                     },
 
                 "color_image" : [{
