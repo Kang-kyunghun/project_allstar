@@ -60,22 +60,6 @@ class ListView(View):
             } for product in products]
     
         return JsonResponse({'products': products_list}, status=200)
-<<<<<<< HEAD
-
-from account.models     import Wishlist
-from .models            import (FilteringColor, 
-                                Product, 
-                                SubCategory, 
-                                Series, 
-                                Sex, 
-                                Color, 
-                                ProductSize, 
-                                Size, 
-                                Medium, 
-                                ProductInformation, 
-                                Promotion)
-=======
->>>>>>> master
 
 class ProductView(View):
     def get(self, request, id):  
