@@ -1,5 +1,6 @@
 from django.db      import models
-# from product.models import Product 
+
+from product.models import Product 
 
 class Account(models.Model):
     email               = models.CharField(max_length=100, unique = True)
@@ -12,6 +13,7 @@ class Account(models.Model):
     is_agreed_texting   = models.BooleanField(default=False)
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
+    wishlist            = models.ManyToMany(Product, through = 'Wishlist')
 
     def __str__(self):
         return self.email
@@ -19,12 +21,9 @@ class Account(models.Model):
     class Meta:
         db_table = "accounts"
 
+class Wishlist(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-# product 앱 merging 이후 구현
-# class Wishlist(models.Model):
-#     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE) 
-
-#     class Meta:
-#         db_table = 'wishlists'
-
+    class Meta:
+        db_table = 'wishlists'
