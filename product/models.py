@@ -141,4 +141,3 @@ class ProductInformation(models.Model):
     
     class Meta:
         db_table = 'product_informations'
-

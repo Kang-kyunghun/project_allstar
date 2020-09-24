@@ -1,8 +1,8 @@
-from django.urls import path, include
-
-from .views import ListView, MainView
+from django.urls        import path
+from .views             import ProductView, MainView, ListView
 
 urlpatterns = [
+    path('/<int:id>', ProductView.as_view()),
     path('/main', MainView.as_view()),
     path('', ListView.as_view()),
 ]
