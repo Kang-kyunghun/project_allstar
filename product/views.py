@@ -74,7 +74,8 @@ class ListView(View):
         return JsonResponse({'products': products_list}, status=200)
 
 class ProductView(View):
-    def get(self, request, id):  
+    def get(self, request, id):
+        RECOMMENDATIONS = 10  
         try:
             queryset = Product.objects.all()
             product = queryset.select_related('sex', 'color', 'sub_category', 'series', 'promotion', 'productinformation')\
@@ -124,6 +125,6 @@ class ProductView(View):
                     'hover_image'       :similar_product.hover_image,
                     'serial_number'     :similar_product.serial_number,
                     'promotion'         :similar_product.promotion.name if similar_product.promotion else None
-                } for similar_product in queryset.exclude(id=id).filter(price=product.price)[0:10]],
+                } for similar_product in queryset.exclude(id=id).filter(price=product.price)[:RECOMMENDATIONS]],
         }
         return JsonResponse({'product_information': [information_dict]}, status=200)
