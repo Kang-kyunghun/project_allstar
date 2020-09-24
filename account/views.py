@@ -45,7 +45,9 @@ class SignUpView(View):
                 is_agreed_texting   = False,
             ).save()
             return JsonResponse({'message':'SUCCESS'}, status=200)
-        
+        except KeyError:
+            return JsonResponse({'message':'KEY_ERROR'}, status=400)
+
 class SignInView(View):
     def post(self, request):           
         data = json.loads(request.body)

@@ -13,7 +13,6 @@ class Account(models.Model):
     is_agreed_texting   = models.BooleanField(default=False)
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
-    wishlist            = models.ManyToMany(Product, through = 'Wishlist')
 
     def __str__(self):
         return self.email
