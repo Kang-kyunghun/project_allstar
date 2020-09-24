@@ -4,6 +4,7 @@ from django.views       import View
 from django.http        import JsonResponse
 from django.db.models   import Prefetch
 
+from account.models     import Wishlist
 from utils              import is_wishlist
 from .models            import (Category, 
                                 SubCategory, 
