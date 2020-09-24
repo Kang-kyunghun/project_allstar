@@ -1,8 +1,8 @@
 from django.db      import models
-from false_account.models import Account
+from account.models import Account
 from product.models import Product, Size
 
-class Cart(Models.model):
+class Cart(models.Model):
     account         = models.ForeignKey(Account, on_delete=models.CASCADE)
     product         = models.ForeignKey(Product, on_delete=models.CASCADE)
     size            = models.ForeignKey(Size, on_delete=models.CASCADE)

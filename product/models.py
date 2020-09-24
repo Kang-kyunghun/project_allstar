@@ -95,7 +95,7 @@ class Product(models.Model):
     main_image          = models.URLField(max_length = 500)
     hover_image         = models.URLField(max_length = 500)
     price               = models.DecimalField(max_digits = 10, decimal_places = 4)
-    discount_rate       = models.DecimalField(max_digits = 3, decimal_places = 2, null = True)
+    discount_rate       = models.DecimalField(max_digits = 5, decimal_places = 2, null = True)
     sex                 = models.ForeignKey(Sex, on_delete = models.CASCADE)
     simple_description  = models.CharField(max_length = 200, null = True)
     color               = models.ForeignKey(Color, on_delete = models.CASCADE)
