@@ -117,7 +117,7 @@ class ProductView(View):
                 {
                         'id'            : series_product.id,
                         'main_image'    : series_product.medium_set.all()[3].medium_url 
-                } for series_product in queryset.filter(series_id=product.series)],  ## query -> product
+                } for series_product in queryset.filter(series_id=product.series)],
         'recommended_products'  : [
                 {
                     'main_image'        :similar_product.main_image,
