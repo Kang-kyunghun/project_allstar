@@ -82,7 +82,7 @@ class Size(models.Model):
     name = models.IntegerField(default = 0)
 
     def __str__(self):
-        return self.name 
+        return str(self.name) 
     
     class Meta:
         db_table = 'sizes'

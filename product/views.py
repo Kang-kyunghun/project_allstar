@@ -29,6 +29,16 @@ class MainView(View):
 
         return JsonResponse({'sub_categories': sub_category_list}, status=200)
 
+class SearchView(View):
+    def get(self, request):
+        products_list = [{
+                    'id'    : product.id ,
+                    'name'  : product.series.name ,
+                    'image' : product.main_image,
+                }for product in Product.objects.all()]
+        
+        return JsonResponse({'products': products_list}, status=200)
+
 class ListView(View):   
     def get(self, request):
         try:
@@ -54,14 +64,16 @@ class ListView(View):
             products         = products.filter(size__name__in = size_filter) if size_filter else products
         
         except:
-            return JsonResponse({'message':'INVALID_VALU'}, status= 401)
+            return JsonResponse({'message':'INVALID_VALUE'}, status= 401)
         else:
             products_list=[{
                 "main_image":{
                         'id'          : product.id,
                         'price'       : int(product.price),
                         'image_url'   : [product.main_image, product.hover_image],
-                        'series_name' : product.series.name
+                        'series_name' : product.series.name,
+                        'discount_rate': int(product.discount_rate) if product.discount_rate else None,
+                        'wishlist'   : is_wishlist(request, product.id)
                     },
 
                 "color_image" : [{
